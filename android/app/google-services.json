@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "277991621852",
+    "project_id": "deepfocus-dd79d",
+    "storage_bucket": "deepfocus-dd79d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:277991621852:android:9abbc21e76d99116d9e019",
+        "android_client_info": {
+          "package_name": "com.example.deepfocus"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "277991621852-lc7737ol3dtm77cnepnhk9tsjdo6ljf0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBH17gVZ9jBVd2fNa2DS1LUAr6xGeNPzoI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "277991621852-lc7737ol3dtm77cnepnhk9tsjdo6ljf0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "277991621852-vjhuh86ocockn9abi16vh53rh5u2ps6e.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.deepfocus"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
