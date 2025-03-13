@@ -1,4 +1,5 @@
 import 'package:deepfocus/ui/auth/auth_viewmodel.dart';
+import 'package:deepfocus/ui/auth/pages/email_verification.dart';
 import 'package:flutter/material.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -11,8 +12,9 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-
   final authViewModel = AuthViewmodel();
+
+  final TextEditingController nameController = TextEditingController();
 
   final TextEditingController emailController = TextEditingController();
 
@@ -53,6 +55,18 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   @override
+  void initState() {
+    authViewModel.registerUser.addListener(_listener);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    authViewModel.registerUser.removeListener(_listener);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Form(
@@ -73,7 +87,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     spacing: 15,
                     children: [
                       TextFormField(
-                        controller: emailController,
+                        controller: nameController,
                         decoration: InputDecoration(
                           labelText: "Name",
                           hintText: "Enter your name",
@@ -128,9 +142,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   SizedBox(height: 10),
                   FilledButton(
                     onPressed: () {
-                      authViewModel.registerUser.execute(
-                        (emailController.text, passwordController.text),
-                      );
+                      authViewModel.registerUser.execute((
+                        emailController.text,
+                        passwordController.text,
+                      ));
                     },
                     style: FilledButton.styleFrom(
                       minimumSize: const Size(double.infinity, 50),
@@ -236,7 +251,15 @@ class _RegisterPageState extends State<RegisterPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text("Already have an account?"),
-                      TextButton(onPressed: () {}, child: Text("Login")),
+                      TextButton(
+                        onPressed: () {
+                          widget.pageController.previousPage(
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                          );
+                        },
+                        child: Text("Login"),
+                      ),
                     ],
                   ),
                 ],
@@ -246,5 +269,17 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       ),
     );
+  }
+
+  void _listener() {
+    if (authViewModel.registerUser.completed) {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => EmailVerification(userCredential: authViewModel.userCredential,),));
+    } else if (authViewModel.registerUser.error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(authViewModel.registerUser.error.toString()),
+        ),
+      );
+    }
   }
 }

@@ -198,7 +198,7 @@ class _LoginPageState extends State<LoginPage> {
                       TextButton(
                         onPressed: () async {
                           await widget.pageController.nextPage(
-                            duration: Duration(milliseconds: 500),
+                            duration: Duration(milliseconds: 300),
                             curve: Curves.ease,
                           );
                         },
