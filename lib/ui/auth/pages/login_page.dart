@@ -18,6 +18,19 @@ class _LoginPageState extends State<LoginPage> {
   final authViewModel = AuthViewmodel();
 
   bool isPasswordVisible = true;
+
+  @override
+  void initState() {
+    authViewModel.loginUser.addListener(_listener);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    authViewModel.loginUser.removeListener(_listener);
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,9 +100,11 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   FilledButton(
                     onPressed: () {
-                      authViewModel.loginUser.execute(
-                        (emailController.text, passwordController.text),
-                      );
+                      bool containsDomain = emailController.text.contains(".com");
+                      authViewModel.loginUser.execute((
+                        containsDomain ? emailController.text : "${emailController.text}.com",
+                        passwordController.text,
+                      ));
                     },
                     style: FilledButton.styleFrom(
                       minimumSize: const Size(double.infinity, 50),
@@ -120,74 +135,82 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ],
                   ),
-                  Container(
-                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                    decoration: BoxDecoration(
-                      color: Color(0xFF4285F4),
-                      borderRadius: BorderRadius.circular(10),
+                  GestureDetector(
+                    onTap: () {
+                      authViewModel.signInWithGoogle.execute();
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                      decoration: BoxDecoration(
+                        color: Color(0xFF4285F4),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        spacing: 10,
+                        children: [
+                          Align(
+                            alignment: Alignment.bottomLeft,
+                            child: Container(
+                              padding: EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Image.asset("assets/google.png", scale: 2),
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              "Sign In with Google",
+                              textAlign: TextAlign.center,
+                              style: Theme.of(
+                                context,
+                              ).textTheme.titleMedium?.copyWith(
+                                color: Colors.white,
+                                letterSpacing: 1,
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 15),
+                        ],
+                      ),
                     ),
-                    child: Row(
-                      spacing: 10,
-                      children: [
-                        Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Container(
+                  ),
+                  SizedBox(height: 5),
+                  GestureDetector(
+                    onTap: () => authViewModel.signInWithGitHub.execute(),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                      decoration: BoxDecoration(
+                        color: Color(0xFF333333),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        spacing: 10,
+                        children: [
+                          Container(
                             padding: EdgeInsets.all(5),
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child: Image.asset("assets/google.png", scale: 2),
+                            child: Image.asset("assets/github.png", scale: 2),
                           ),
-                        ),
-                        Expanded(
-                          child: Text(
-                            "Sign In with Google",
-                            textAlign: TextAlign.center,
-                            style: Theme.of(
-                              context,
-                            ).textTheme.titleMedium?.copyWith(
-                              color: Colors.white,
-                              letterSpacing: 1,
+                          Expanded(
+                            child: Text(
+                              "Sign in with Github",
+                              textAlign: TextAlign.center,
+                              style: Theme.of(
+                                context,
+                              ).textTheme.titleMedium?.copyWith(
+                                color: Colors.white,
+                                letterSpacing: 1,
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(width: 15),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 5),
-                  Container(
-                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                    decoration: BoxDecoration(
-                      color: Color(0xFF333333),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Row(
-                      spacing: 10,
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Image.asset("assets/github.png", scale: 2),
-                        ),
-                        Expanded(
-                          child: Text(
-                            "Sign in with Github",
-                            textAlign: TextAlign.center,
-                            style: Theme.of(
-                              context,
-                            ).textTheme.titleMedium?.copyWith(
-                              color: Colors.white,
-                              letterSpacing: 1,
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 15),
-                      ],
+                          SizedBox(width: 15),
+                        ],
+                      ),
                     ),
                   ),
                   SizedBox(height: 20),
@@ -213,5 +236,13 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  void _listener() {
+    if (authViewModel.loginUser.error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Invalid Credentials")),
+      );
+    }
   }
 }

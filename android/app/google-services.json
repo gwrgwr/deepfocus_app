@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "277991621852-hi7uh9dr67vakostchu9lhbthgj5k22c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.deepfocus",
+            "certificate_hash": "58374b86a02e2f77442571d54d8a9dcbbc403aab"
+          }
+        },
+        {
           "client_id": "277991621852-lc7737ol3dtm77cnepnhk9tsjdo6ljf0.apps.googleusercontent.com",
           "client_type": 3
         }

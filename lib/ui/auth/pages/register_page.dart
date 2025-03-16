@@ -1,5 +1,5 @@
 import 'package:deepfocus/ui/auth/auth_viewmodel.dart';
-import 'package:deepfocus/ui/auth/pages/email_verification.dart';
+import 'package:deepfocus/ui/home/pages/home_page.dart';
 import 'package:flutter/material.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -29,6 +29,8 @@ class _RegisterPageState extends State<RegisterPage> {
   bool hasSpecialChar = false;
   bool hasMinLength = false;
 
+  String? emailError;
+
   void checkPassword(String value) {
     setState(() {
       hasUppercase = value.contains(RegExp(r'[A-Z]')); // Letra maiúscula
@@ -40,7 +42,7 @@ class _RegisterPageState extends State<RegisterPage> {
     });
   }
 
-  Widget buildRequirement(String text, bool isValid) {
+  Widget _buildRequirement(String text, bool isValid) {
     return Row(
       children: [
         Icon(
@@ -103,6 +105,10 @@ class _RegisterPageState extends State<RegisterPage> {
                           suffixText: ".com",
                           enabledBorder: OutlineInputBorder(),
                           focusedBorder: OutlineInputBorder(),
+                          errorBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.red),
+                          ),
+                          errorText: emailError,
                         ),
                       ),
                       TextFormField(
@@ -127,13 +133,13 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                         ),
                       ),
-                      buildRequirement("At least 8 characters", hasMinLength),
-                      buildRequirement(
+                      _buildRequirement("At least 8 characters", hasMinLength),
+                      _buildRequirement(
                         "At least one uppercase letter",
                         hasUppercase,
                       ),
-                      buildRequirement("At least one number", hasNumber),
-                      buildRequirement(
+                      _buildRequirement("At least one number", hasNumber),
+                      _buildRequirement(
                         "At least one special character",
                         hasSpecialChar,
                       ),
@@ -142,8 +148,13 @@ class _RegisterPageState extends State<RegisterPage> {
                   SizedBox(height: 10),
                   FilledButton(
                     onPressed: () {
+                      setState(() {
+                        emailError = null;
+                      });
+                      bool containsDomain = emailController.text.contains(".com");
                       authViewModel.registerUser.execute((
-                        emailController.text,
+                        nameController.text,
+                        containsDomain ? emailController.text : "${emailController.text}.com",
                         passwordController.text,
                       ));
                     },
@@ -273,13 +284,13 @@ class _RegisterPageState extends State<RegisterPage> {
 
   void _listener() {
     if (authViewModel.registerUser.completed) {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => EmailVerification(userCredential: authViewModel.userCredential,),));
+      Navigator.of(
+        context,
+      ).pushReplacement(MaterialPageRoute(builder: (context) => HomePage()));
     } else if (authViewModel.registerUser.error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(authViewModel.registerUser.error.toString()),
-        ),
-      );
+      setState(() {
+        emailError = "Email Already in Use";
+      });
     }
   }
 }
