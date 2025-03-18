@@ -2,8 +2,12 @@ import 'package:deepfocus/firebase_options.dart';
 import 'package:deepfocus/ui/auth/widgets/auth_controller.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gemini/flutter_gemini.dart';
+
+const geminiApi = "AIzaSyAaeedkVTKwq_2HnGI8FJaaPL3M-91QAHQ";
 
 void main() async {
+  Gemini.init(apiKey: geminiApi);
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
