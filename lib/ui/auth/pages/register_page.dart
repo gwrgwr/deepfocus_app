@@ -12,7 +12,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  final authViewModel = AuthViewmodel();
+  final authViewModel = AuthViewModel();
 
   final TextEditingController nameController = TextEditingController();
 
@@ -151,12 +151,12 @@ class _RegisterPageState extends State<RegisterPage> {
                       setState(() {
                         emailError = null;
                       });
-                      bool containsDomain = emailController.text.contains(".com");
                       authViewModel.registerUser.execute((
                         nameController.text,
-                        containsDomain ? emailController.text : "${emailController.text}.com",
+                        emailController.text.trim(),
                         passwordController.text,
                       ));
+                      print(emailController.text.trim());
                     },
                     style: FilledButton.styleFrom(
                       minimumSize: const Size(double.infinity, 50),

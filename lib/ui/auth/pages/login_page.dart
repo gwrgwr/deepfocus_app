@@ -1,3 +1,4 @@
+import 'package:deepfocus/shared/widgets/filled_expandend_button.dart';
 import 'package:deepfocus/ui/auth/auth_viewmodel.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +16,7 @@ class _LoginPageState extends State<LoginPage> {
 
   final TextEditingController passwordController = TextEditingController();
 
-  final authViewModel = AuthViewmodel();
+  final authViewModel = AuthViewModel();
 
   bool isPasswordVisible = true;
 
@@ -94,25 +95,25 @@ class _LoginPageState extends State<LoginPage> {
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        widget.pageController.jumpToPage(2);
+                      },
                       child: Text("Forgot password?"),
                     ),
                   ),
-                  FilledButton(
+                  FilledExpandendButton(
                     onPressed: () {
-                      bool containsDomain = emailController.text.contains(".com");
+                      bool containsDomain = emailController.text.contains(
+                        ".com",
+                      );
                       authViewModel.loginUser.execute((
-                        containsDomain ? emailController.text : "${emailController.text}.com",
+                        containsDomain
+                            ? emailController.text
+                            : "${emailController.text}.com",
                         passwordController.text,
                       ));
                     },
-                    style: FilledButton.styleFrom(
-                      minimumSize: const Size(double.infinity, 50),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: Text("LOGIN", style: TextStyle(letterSpacing: 2)),
+                    text: "LOGIN",
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -140,7 +141,10 @@ class _LoginPageState extends State<LoginPage> {
                       authViewModel.signInWithGoogle.execute();
                     },
                     child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                      padding: EdgeInsets.symmetric(
+                        vertical: 10,
+                        horizontal: 15,
+                      ),
                       decoration: BoxDecoration(
                         color: Color(0xFF4285F4),
                         borderRadius: BorderRadius.circular(10),
@@ -180,7 +184,10 @@ class _LoginPageState extends State<LoginPage> {
                   GestureDetector(
                     onTap: () => authViewModel.signInWithGitHub.execute(),
                     child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                      padding: EdgeInsets.symmetric(
+                        vertical: 10,
+                        horizontal: 15,
+                      ),
                       decoration: BoxDecoration(
                         color: Color(0xFF333333),
                         borderRadius: BorderRadius.circular(10),
@@ -240,9 +247,9 @@ class _LoginPageState extends State<LoginPage> {
 
   void _listener() {
     if (authViewModel.loginUser.error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Invalid Credentials")),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Invalid Credentials")));
     }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:deepfocus/ui/auth/pages/login_page.dart';
 import 'package:deepfocus/ui/auth/pages/register_page.dart';
+import 'package:deepfocus/ui/auth/pages/reset_password.dart';
 import 'package:flutter/material.dart';
 
 class AuthPageView extends StatelessWidget {
@@ -13,8 +14,9 @@ class AuthPageView extends StatelessWidget {
       physics: NeverScrollableScrollPhysics(),
       controller: pageController,
       children: [
-        LoginPage(pageController: pageController,),
-        RegisterPage(pageController: pageController,)
+        LoginPage(pageController: pageController),
+        RegisterPage(pageController: pageController),
+        ResetPassword(pageController: pageController),
       ],
     );
   }

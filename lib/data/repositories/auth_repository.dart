@@ -1,4 +1,5 @@
 import 'package:deepfocus/data/services/api_client.dart';
+import 'package:deepfocus/models/user_mongo.dart';
 import 'package:deepfocus/utils/result.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -42,5 +43,13 @@ class AuthRepository {
 
   Future<Result<UserCredential>> signInWithGitHub() async {
     return await _apiClient.signInWithGitHub();
+  }
+
+  Future<Result<UserMongo>> getUserFromMongo() {
+    return _apiClient.getUserFromMongo();
+  }
+
+  Future<Result<void>> sendEmailResetPassword({required String email}) {
+    return _apiClient.sendEmailResetPassword(email: email);
   }
 }
